@@ -17,8 +17,8 @@ app.post("/generate", async (req, res) => {
     const { idea, type } = req.body;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-    });
+  model: "gemini-2.5-flash-lite",
+});
 
     const prompt = `
 Write a professional ${type} screenplay.
