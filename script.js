@@ -1,35 +1,92 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     const button = document.getElementById("generateBtn");
 
     button.addEventListener("click", function () {
-        document.body.innerHTML = `
-        <div class="creator">
-            <h1>🎬 Sonya Stories AI</h1>
-            <p>Turn your ideas into movie scripts.</p>
 
-            <textarea id="storyIdea" placeholder="Write your story idea here..."></textarea>
+        document.body.innerHTML = `
+        <div class="container">
+
+            <h1>🎬 Sonya's Stories</h1>
+
+            <h2>AI Script Writer</h2>
+
+            <textarea
+                id="storyIdea"
+                placeholder="Enter your movie idea here..."
+                rows="8"
+            ></textarea>
+
+            <br><br>
 
             <select id="storyType">
                 <option>Short Film</option>
-                <option>Movie</option>
-                <option>YouTube Episode</option>
-                <option>Advertisement</option>
+                <option>Feature Film</option>
+                <option>Series</option>
             </select>
 
-            <button id="createStory">Create Script</button>
+            <br><br>
 
-            <div id="result"></div>
+            <button id="createStory">
+                Create Script
+            </button>
+
+            <div id="result" style="margin-top:30px;"></div>
+
         </div>
         `;
 
-        document.getElementById("createStory").addEventListener("click", function () {
-            const idea = document.getElementById("storyIdea").value;
+        document.getElementById("createStory").addEventListener("click", async function () {
 
-            document.getElementById("result").innerHTML = `
-            <h2>Your Story Draft</h2>
-            <p><strong>Idea:</strong> ${idea}</p>
-            <p>Characters, scenes, dialogue and camera directions will appear here.</p>
-            `;
+            const idea = document.getElementById("storyIdea").value.trim();
+            const type = document.getElementById("storyType").value;
+
+            if (!idea) {
+                alert("Please enter a story idea.");
+                return;
+            }
+
+            document.getElementById("result").innerHTML =
+                "<h2>Generating screenplay...</h2>";
+
+            try {
+
+                const response = await fetch("http://localhost:3000/generate", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        idea: idea,
+                        type: type
+                    })
+
+                });
+
+                const data = await response.json();
+
+                document.getElementById("result").innerHTML = `
+                    <h2>Your Screenplay</h2>
+                    <pre style="white-space: pre-wrap;">${data.script}</pre>
+                `;
+
+            } catch (error) {
+
+                document.getElementById("result").innerHTML = `
+                    <h2>Error</h2>
+                    <p>Unable to connect to the AI server.</p>
+                    <p>Make sure your Node server is running.</p>
+                `;
+
+                console.error(error);
+
+            }
+
         });
+
     });
+
 });
