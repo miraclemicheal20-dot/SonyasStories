@@ -67,12 +67,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 const data = await response.json();
+console.log(data);
 
-                document.getElementById("result").innerHTML = `
-                    <h2>Your Screenplay</h2>
-                    <pre style="white-space: pre-wrap;">${data.script}</pre>
-                `;
-
+document.getElementById("result").innerHTML = `
+    <h2>Your Screenplay</h2>
+    <pre style="white-space: pre-wrap;">${JSON.stringify(data, null, 2)}</pre>
+`;
             } catch (error) {
 
                 document.getElementById("result").innerHTML = `
